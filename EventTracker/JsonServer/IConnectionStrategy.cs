@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using EventTracker.Models;
+﻿using RestSharp;
 
 namespace EventTracker.JsonServer
 {
   public interface IConnectionStrategy
   {
-    List<User> Connect(string connectionString);
+    IRestResponse Connect(string connectionString);
+
+    IRestResponse PostMethod<T>(string connectionString, T body);
   }
 }

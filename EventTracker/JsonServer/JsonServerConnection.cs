@@ -10,15 +10,32 @@ namespace EventTracker.JsonServer
 {
   public class JsonServerConnection : IConnectionStrategy
   {
-    public List<User> Connect(string connectionString)
+    private readonly RestClient client;
+
+    public JsonServerConnection()
     {
-      var client = new RestClient();
+      client = new RestClient();
+    }
+
+    public IRestResponse Connect(string connectionString)
+    {
       var request = new RestRequest(connectionString, Method.GET);
-      var  response = client.Execute<List<User>>(request);
+      var response = client.Execute(request);
 
-      var users = response.IsSuccessful ? JsonConvert.DeserializeObject<UserList>(response.Content).Users : null;
+      return response;
+    }
 
-      return users;
+    public IRestResponse PostMethod<T>(string connectionString, T body)
+    {
+      var request = new RestRequest(connectionString, Method.POST) { RequestFormat = DataFormat.Json} ;
+      request.AddJsonBody( new
+      {
+        Users = body,
+      });
+      //request.Parameters[0].Name = "users";
+      var response = client.Execute(request);
+
+      return response;
     }
   }
 }

@@ -4,6 +4,8 @@ using EventTracker.JsonServer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using EventTracker.Models;
+using EventTracker.Services;
+using EventTracker.Services.Abstract;
 
 namespace EventTracker.Controllers
 {
@@ -11,10 +13,12 @@ namespace EventTracker.Controllers
   {
     private const string JsonServerConnectionString = "https://my-json-server.typicode.com/aceofbase199/demo/db";
     private readonly ILogger<LoginController> _logger;
+    private readonly IUserService _userService;
 
-    public LoginController(ILogger<LoginController> logger)
+    public LoginController(ILogger<LoginController> logger, IUserService userService)
     {
       _logger = logger;
+      _userService = userService;
     }
 
     public IActionResult Login()
@@ -23,21 +27,22 @@ namespace EventTracker.Controllers
     }
 
     [HttpPost]
-    public IActionResult Login(User user)
+    public IActionResult Login(UserDTO user)
     {
       if (!ModelState.IsValid)
       {
         return View("LoginPage");
       }
 
-      if (!ValidateUser(user))
+      if (!_userService.IsValidUser(user))
       {
         ModelState.AddModelError("Not_Valid_User", "The user name or password is incorrect");
-        
+        var users = _userService.SaveUser(user);
+
         return View("LoginPage");
       }
 
-      return View("~/Views/Dashboard/Dashboard.cshtml", user);
+      return View("~/Views/Dashboard/Dashboard.cshtml");
     }
 
     public IActionResult Privacy()
@@ -49,15 +54,6 @@ namespace EventTracker.Controllers
     public IActionResult Error()
     {
       return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-
-    private bool ValidateUser(User user)
-    {
-      var context = new ConnectionContext(new JsonServerConnection(), JsonServerConnectionString);
-      var users = context.Connect();
-      var existingUser = users.FirstOrDefault(x => x.UserName == user.UserName && x.Password == user.Password);
-
-      return existingUser != null;
     }
   }
 }

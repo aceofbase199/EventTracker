@@ -1,13 +1,12 @@
+﻿using Newtonsoft.Json;
 using System;
 using EventTracker.Models.Enums;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
 
-namespace EventTracker.Views.Dashboard
+namespace EventTracker.Entities
 {
-  public class Event : PageModel
+  public class Event
   {
+    public int Id { get; set; }
     public string EventName { get; set; }
 
     public string Organizer { get; set; }

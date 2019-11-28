@@ -5,7 +5,7 @@ using RestSharp;
 
 namespace EventTracker.Models
 {
-  public class User
+  public class UserDTO
   {
     [JsonProperty("id")]
     public int UserId { get; set; }

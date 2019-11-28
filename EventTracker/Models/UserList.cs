@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace EventTracker.Models
 {
   public class UserList
   {
-    public List<User> Users { get; set; }
+    //[JsonProperty("users")]
+    public List<Entities.User> Users { get; set; }
   }
 }
