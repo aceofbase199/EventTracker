@@ -10,40 +10,41 @@ namespace EventTracker.Services
   public class UserService : IUserService
   {
     private readonly IConnectionService _connectionService;
+    private readonly string _salt;
     public UserService(IConnectionService connectionService)
     {
+      _salt = SaltUtil.Create();
       _connectionService = connectionService;
     }
 
     public List<User> GetUserList()
     {
-      var response = _connectionService.Connect();
-      var users = DeserializationUtil.DeserializeRestResponse<Models.UserList>(response).Users;
+      var response = _connectionService.Get("users");
+      var users = DeserializationUtil.DeserializeRestResponse<List<User>>(response);
 
       return users;
     }
 
-    public List<User> SaveUser(UserDTO userDto)
+    public User SaveUser(UserDTO userDto)
     {
-      var users = GetUserList();
       // add AutoMapper
       var user = new User
       {
-        Password = userDto.Password,
+        Password = HashUtil.Create(userDto.Password, _salt),
         UserId = userDto.UserId,
         UserName = userDto.UserName
       };
 
-      users.Add(user);
-      var response = _connectionService.Post(users);
+      var response = _connectionService.Post("users", user);
 
-      return users;
+      return response.IsSuccessful ? user : null;
     }
 
     public bool IsValidUser(UserDTO user)
     {
       var users = GetUserList();
-      var existingUser = users.FirstOrDefault(x => x.UserName == user.UserName && x.Password == user.Password);
+      var password = HashUtil.Create(user.Password, _salt);
+      var existingUser = users.FirstOrDefault(x => x.UserName == user.UserName && x.Password == password);
 
       return existingUser != null;
     }

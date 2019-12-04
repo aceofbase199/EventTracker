@@ -4,8 +4,8 @@ namespace EventTracker.Services.Abstract
 {
   public interface IConnectionService
   {
-    IRestResponse Connect();
+    IRestResponse Get(string route);
 
-    IRestResponse Post<T>(T body);
+    IRestResponse Post<T>(string route, T body);
   }
 }

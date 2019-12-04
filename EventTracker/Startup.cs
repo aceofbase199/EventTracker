@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EventTracker.Configuration;
 using EventTracker.JsonServer;
 using EventTracker.Services;
 using EventTracker.Services.Abstract;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,9 +24,12 @@ namespace EventTracker
     {
       services.AddControllersWithViews();
 
-      services.AddSingleton<IConnectionStrategy, JsonServerConnection>();
+      services.AddSingleton<IJsonServerApi, JsonServerApi>();
       services.AddSingleton<IConnectionService, ConnectionService>();
       services.AddTransient<IUserService, UserService>();
+
+      var appSettings = Configuration.GetSection("AppSettings");
+      services.Configure<AppSettings>(appSettings);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,18 +8,26 @@ using JsonSerializer = RestSharp.Serialization.Json.JsonSerializer;
 
 namespace EventTracker.JsonServer
 {
-  public class JsonServerConnection : IConnectionStrategy
+  public class JsonServerApi : IJsonServerApi//IConnectionStrategy
   {
     private readonly RestClient client;
 
-    public JsonServerConnection()
+    public JsonServerApi()
     {
       client = new RestClient();
     }
 
-    public IRestResponse Connect(string connectionString)
+    //public IRestResponse Connect(string connectionString)
+    //{
+    //  var request = new RestRequest(connectionString, Method.GET);
+    //  var response = client.Execute(request);
+
+    //  return response;
+    //}
+
+    public IRestResponse GetMethod(string connectionString)
     {
-      var request = new RestRequest(connectionString, Method.GET);
+      var request = new RestRequest(connectionString);
       var response = client.Execute(request);
 
       return response;
@@ -28,11 +36,7 @@ namespace EventTracker.JsonServer
     public IRestResponse PostMethod<T>(string connectionString, T body)
     {
       var request = new RestRequest(connectionString, Method.POST) { RequestFormat = DataFormat.Json} ;
-      request.AddJsonBody( new
-      {
-        Users = body,
-      });
-      //request.Parameters[0].Name = "users";
+      request.AddJsonBody(body);
       var response = client.Execute(request);
 
       return response;

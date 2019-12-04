@@ -9,6 +9,6 @@ namespace EventTracker.Services.Abstract
   {
     List<User> GetUserList();
     bool IsValidUser(UserDTO user);
-    List<User> SaveUser(UserDTO userDto);
+    User SaveUser(UserDTO userDto);
   }
 }

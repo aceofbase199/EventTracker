@@ -10,5 +10,7 @@ namespace EventTracker.Services.Abstract
   {
     List<Event> GetEvents();
     List<Event> GetUserEvents(int userId);
+    List<Event> GetUserEventsByLocation(int userId, string location);
+
   }
 }

@@ -2,30 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EventTracker.Configuration;
 using EventTracker.JsonServer;
 using EventTracker.Services.Abstract;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using RestSharp;
 
 namespace EventTracker.Services
 {
   public class ConnectionService: IConnectionService
   {
-    private const string JsonServerConnectionString = "https://my-json-server.typicode.com/aceofbase199/demo/db";
-    private readonly ConnectionContext _context;
+    private readonly AppSettings _appSettings;
+    private readonly IJsonServerApi _jsonServerApi;
+    private readonly string _baseJsonServerUrl;
 
-    public ConnectionService()
+    public ConnectionService(IJsonServerApi jsonServerApi, IOptions<AppSettings> appSettingsAccessor)
     {
-      _context = new ConnectionContext(new JsonServerConnection(), JsonServerConnectionString);
+      _jsonServerApi = jsonServerApi;
+      _appSettings = appSettingsAccessor.Value;
+      _baseJsonServerUrl = _appSettings.JsonServerUrl;
     }
 
-    public IRestResponse Connect()
+    public IRestResponse Get(string route)
     {
-      return _context.Connect();
+      var connectionString = _baseJsonServerUrl + route;
+
+      return _jsonServerApi.GetMethod(connectionString);
     }
 
-    public IRestResponse Post<T>(T body)
+    public IRestResponse Post<T>(string route, T body)
     {
-      return _context.PostMethod(body);
+      var connectionString = _baseJsonServerUrl + route;
+
+      return _jsonServerApi.PostMethod(connectionString, body);
     }
   }
 }

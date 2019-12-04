@@ -18,5 +18,10 @@ namespace EventTracker.Services
     {
       throw new NotImplementedException();
     }
+
+    public List<Event> GetUserEventsByLocation(int userId, string location)
+    {
+      throw new NotImplementedException();
+    }
   }
 }
