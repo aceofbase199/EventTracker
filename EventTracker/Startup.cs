@@ -2,11 +2,15 @@ using EventTracker.Configuration;
 using EventTracker.JsonServer;
 using EventTracker.Services;
 using EventTracker.Services.Abstract;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventTracker
 {
@@ -22,6 +26,33 @@ namespace EventTracker
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddAuthentication(options =>
+        {
+          options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+          options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+        })
+        .AddCookie()
+        .AddOpenIdConnect(options =>
+        {
+          options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+          options.Authority = Configuration["Okta:Domain"] + "/oauth2/default";
+          options.RequireHttpsMetadata = true;
+          options.ClientId = Configuration["Okta:ClientId"];
+          options.ClientSecret = Configuration["Okta:ClientSecret"];
+          options.ResponseType = OpenIdConnectResponseType.Code;
+          options.GetClaimsFromUserInfoEndpoint = true;
+          options.Scope.Add("openid");
+          options.Scope.Add("profile");
+          options.SaveTokens = true;
+          options.TokenValidationParameters = new TokenValidationParameters
+          {
+            NameClaimType = "name",
+            RoleClaimType = "groups",
+            ValidateIssuer = true
+          };
+        });
+
+      services.AddAuthorization();
       services.AddControllersWithViews();
 
       services.AddSingleton<IJsonServerApi, JsonServerApi>();
@@ -50,13 +81,14 @@ namespace EventTracker
 
       app.UseRouting();
 
+      app.UseAuthentication();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllerRoute(
                   name: "default",
-                  pattern: "{controller=Login}/{action=Login}/{id?}");
+                  pattern: "{controller=Home}/{action=Index}/{id?}");
       });
     }
   }
