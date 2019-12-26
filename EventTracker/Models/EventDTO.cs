@@ -1,21 +1,18 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using EventTracker.Models.Enums;
 
-namespace EventTracker.Entities
+namespace EventTracker.Models
 {
-  public class Event
+  public class EventDTO
   {
     public int Id { get; set; }
     public string EventName { get; set; }
-
     public string Organizer { get; set; }
-
     public string Location { get; set; }
-
-    [JsonProperty("evtTp")]
     public EventType EventType { get; set; }
-
     public DateTime Date { get; set; }
   }
 }

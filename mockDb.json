@@ -1,16 +1,26 @@
 {
-  "users": [
+  "events": [
     {
-      "UserId": 0,
-      "UserName": "test1",
-      "Password": "UG61gO54mDLbAUHxhVFB1FkQ/SRGLdG/fpMI2RxQJXk=",
-      "id": 2
-    },
-    {
-      "UserId": 0,
-      "UserName": "test1",
-      "Password": "69OPh379zNFVEVoDQqOYjUsoSvvMzmiQJdKso1LZK8g=",
-      "id": 3
+      "id": 1, 
+      "eventName": ".Net Community",
+      "location": "Lviv",
+      "evtTp":"public",
+      "Date": "2019-11-15T19:43:37+0100",
+      "organizer": "Epam"
+    }, {
+      "id": 2,
+      "eventName": "Angular Intro",
+      "location": "Krakiv",
+      "evtTp": "private",
+      "Date": "2019-10-14T19:43:37+0100",
+      "organizer": "Kinetik"
+    }, {
+      "id": 3,
+      "eventName": "Unit/Integration tests",
+      "location": "Kyiv",
+      "evtTp":"internal",
+      "Date": "2019-11-04T19:43:37+0100",
+      "organizer": "SoftServe"
     }
   ]
 }

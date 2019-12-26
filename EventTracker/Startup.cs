@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 namespace EventTracker
 {
@@ -54,10 +55,11 @@ namespace EventTracker
 
       services.AddAuthorization();
       services.AddControllersWithViews();
+      services.AddAutoMapper(typeof(Startup));
 
       services.AddSingleton<IJsonServerApi, JsonServerApi>();
       services.AddSingleton<IConnectionService, ConnectionService>();
-      services.AddTransient<IUserService, UserService>();
+      services.AddTransient<IEventService, EventService>();
 
       var appSettings = Configuration.GetSection("AppSettings");
       services.Configure<AppSettings>(appSettings);

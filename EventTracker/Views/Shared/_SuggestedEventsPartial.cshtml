@@ -1,0 +1,9 @@
+﻿@model List<EventTracker.Models.EventDTO>
+
+@foreach (var userEvent in (List<EventTracker.Models.EventDTO>)ViewData["SuggestedEvents"])
+{
+    <h5>@userEvent.EventName</h5>
+    <h6>@userEvent.Location - @userEvent.Date.ToLongDateString()</h6>
+    <h6>@userEvent.Organizer</h6>
+}
+

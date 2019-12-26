@@ -7,8 +7,8 @@ namespace EventTracker.Services.Abstract
 {
   public interface IUserService
   {
-    List<User> GetUserList();
-    bool IsValidUser(UserDTO user);
-    User SaveUser(UserDTO userDto);
+    //List<User> GetUserList();
+    //bool IsValidUser(UserDTO user);
+    //User SaveUser(UserDTO userDto);
   }
 }

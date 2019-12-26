@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using EventTracker.Models;
 using EventTracker.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,5 +20,12 @@ namespace EventTracker.Views.Dashboard
     public EventType EventType { get; set; }
 
     public DateTime DateTime { get; set; }
+
+
+    public PartialViewResult OnGetSelectLocationPartial()
+    {
+      ViewData["SuggestedEvents"] = new List<EventDTO> { new EventDTO { EventName = "asd" } };
+      return Partial("_SuggestedEventsPartial", new List<EventDTO>{ new EventDTO { EventName = "asd"} });
+    }
   }
 }

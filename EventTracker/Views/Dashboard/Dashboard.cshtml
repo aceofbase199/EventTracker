@@ -1,20 +1,70 @@
 ﻿@page
-@model EventTracker.Views.Dashboard.Event
+@model EventTracker.Models.EventDTO
+@{
+    var suggestedEvents = ViewBag.SuggestedEvents;
+}
+
 @{
     @if (User.Identity.IsAuthenticated)
-     {
-         <div>
-             <h2>Past Events</h2>
-             @*@Model.EventName
-        @Model.Location - @Model.DateTime.ToLongDateString()
-        @Model.Organizer*@
-         </div>
-         <div>
-             <h2>Upcoming Events</h2>
-         </div>
-         <div>
-             <h2>Suggested Events</h2>
-         </div>
-     }
+    {
+        <div>
+            <h2>Past Events</h2>
+            <hr />
+            @foreach (var userEvent in @ViewBag.PastEvents)
+            {
+                <h5>@userEvent.EventName</h5>
+                <h6>@userEvent.Location - @userEvent.Date.ToLongDateString()</h6>
+                <h6>@userEvent.Organizer</h6>
+            }
+        </div>
+        <div>
+            <h2>Upcoming Events</h2>
+            <hr />
+            @foreach (var userEvent in @ViewBag.UpcomingEvents)
+            {
+                <h5>@userEvent.EventName</h5>
+                <h6>@userEvent.Location - @userEvent.Date.ToLongDateString()</h6>
+                <h6>@userEvent.Organizer</h6>
+            }
+        </div>
+        <div>
+            <h2>Suggested Events</h2>
+            <hr />
+            <label>Choose location:</label>
+            @*<form asp-page-handler="SelectLocation" method="post">*@
+            <select id="locationId" name="location" asp-items="@ViewBag.Locations"></select>
+            @*</form>*@
+            @*@Html.DropDownList("locationList", Model.)*@
+            <partial name="_SuggestedEventsPartial" />
+            
+        </div>
+    }
 
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#locationId').on('change', function () {
+                var data = JSON.stringify();
+                return $.ajax({
+                    url: '/Dashboard?handler=SelectLocationPartial',
+                    type: 'GET',
+                    //data: data,
+                    //dataType: 'json',
+                    //contentType: "application/json;",
+                    success: function (data) {
+                        //debugger;
+                        alert(data);
+                        var suggestedEvents = data;
+                    }
+                })
+                    //$.get('/SelectLocation/')
+                    .done(function (data) {
+                        debugger;
+                        var suggestedEvents = data;
+                    });
+            });
+        });
+    </script>
 }

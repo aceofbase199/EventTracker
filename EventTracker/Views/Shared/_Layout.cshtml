@@ -35,7 +35,7 @@
             </div>
         </nav>*@
         <div class="navbar-collapse collapse justify-content-between">
-            <ul class="navbar-nav mr-auto">
+            <ul class="nav navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
@@ -45,7 +45,12 @@
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                 </li>
-            </ul>
+                @*@if (User.Claims.FirstOrDefault(x => x.Value == (ClaimsIdentity)))
+                {*@
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="CreateEvent">Create Event</a>
+                    </li>
+                </ul>
             <partial name="_LoginPartial" />
         </div>
     </header>
